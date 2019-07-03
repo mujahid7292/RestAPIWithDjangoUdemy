@@ -1,0 +1,27 @@
+version: "3"
+# docker-compose version number. 3 is the lattest version
+
+# Now we will define services that make up our application
+services:
+  app: # This is the name of our services
+    build:
+      context: . # This will set the build to our current directory
+    ports:
+      - "8000:8000"
+      # First 8000, means we are exposing port 8000 in our machine.
+      # Second 8000, means we are exposing port 8000 in our docker image.
+    volumes:
+    # Volumes allows us to get the update (that we make to our project) into our docker
+    # image in real time. So this section will maps a volume from our local machine
+    # to our docker container. This means whenever you change some code or file in
+    # the project, it will automatically get updated into the container. That means
+    # you don't need to restart the docker to get the changes.
+     - ./app:/app
+    # ./app = 'app' directory in our local machine
+    # /app =  'app' directory inside the docker image
+
+    # Now we will use 'command' to run our application inside docker container.
+    command: > # > = This symbol break the command to next line
+      sh -c "python3 manage.py runserver 0.0.0.0:8000"
+      # sh = We are going to run the command using shell
+      # -c = Run following command
