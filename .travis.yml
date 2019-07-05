@@ -5,7 +5,7 @@ language: python
 # Next we will tell travis CI what version of python it should use to spin
 # up the server to run automated test.
 python:
- -"3.6"
+ -"3.7"
 
 #Next we are going to tell travis CI, what service we need to use.
 services:
