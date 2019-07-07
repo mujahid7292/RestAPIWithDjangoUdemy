@@ -5,11 +5,11 @@ language: python
 # Next we will tell travis CI what version of python it should use to spin
 # up the server to run automated test.
 python:
- -"3.6"
+  - "3.6"
 
 #Next we are going to tell travis CI, what service we need to use.
-services:
- -"docker"
+service:
+  - "docker"
 # We are just going to need docker service for this project. And all of
 #the sub services are gonna be contained within our docker-compose.yml file
 #and our Dockerfile configuration.
@@ -24,6 +24,6 @@ before_script: pip install docker-compose
 script:
   #Here we are going to run our docker-compose command for running
   #our automated test.
-  -docker-compose run app sh -c "python manage.py test && flake8"
+  - docker-compose run app sh -c "python manage.py test && flake8"
   #We also will run our linting tool by adding "flake8" with the
   #above command.
