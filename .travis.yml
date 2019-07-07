@@ -9,7 +9,7 @@ python:
 
 #Next we are going to tell travis CI, what service we need to use.
 services:
- -docker
+ -"docker"
 # We are just going to need docker service for this project. And all of
 #the sub services are gonna be contained within our docker-compose.yml file
 #and our Dockerfile configuration.
