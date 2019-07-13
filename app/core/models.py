@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, \
     BaseUserManager, PermissionsMixin
 
+
 # Create a model manager class. As our model name is 'user',
 # So, model manager class name will be 'UserModel'
 class UserManager(BaseUserManager):
@@ -34,12 +35,23 @@ class UserManager(BaseUserManager):
 
         return user
 
-# Now we will create our model class
+    def create_superuser(self, email, password):
+        """
+        Create a new super user & save it & return it
+        """
+        user = self.create_user(email, password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
 
+        return user
+
+
+# Now we will create our model class
 class User(AbstractBaseUser, PermissionsMixin):
     """
     This is custom user model, that supports email base
-    user authentication rather than name base user 
+    user authentication rather than name base user
     authentication.
     """
 

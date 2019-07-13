@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
+
 class ModelTests(TestCase):
 
     def test_create_user_with_email_successfull(self):
@@ -16,15 +17,14 @@ class ModelTests(TestCase):
 
         # Create fake user object using above emaill & pass
         user = get_user_model().objects.create_user(
-            email = email,
-            password = password
+            email=email,
+            password=password
         )
 
         # Test the fake user object, whether properly created
         # or not.
-        self.assertEqual(user.email,email)
+        self.assertEqual(user.email, email)
         self.assertTrue(user.check_password(password))
-
 
     def test_new_user_email_normalized(self):
         """
@@ -34,20 +34,19 @@ class ModelTests(TestCase):
         """
 
         # Now we will create a dummy email with all upper case
-        # after @ sign 
+        # after @ sign
         email = "test_email@GMAIL.COM"
         password = "Test1234"
 
         # Create fake user object using above emaill & pass
         user = get_user_model().objects.create_user(
-            email = email,
-            password = password
+            email=email,
+            password=password
         )
 
         # Now we will check whether our upper case email
         # has been converted into lower case.
         self.assertEqual(user.email, email.lower())
-
 
     def test_invalid_user_email_raise_value_error(self):
         """
@@ -56,7 +55,23 @@ class ModelTests(TestCase):
         will raise a value error.
         """
         with self.assertRaises(ValueError):
-            # anything that we run in here should 
-            # raise the value error And if it doesn't 
+            # anything that we run in here should
+            # raise the value error And if it doesn't
             # raise the value error, then this test will fail.
-            get_user_model().objects.create_user(None,'test123')
+            get_user_model().objects.create_user(None, 'test123')
+
+    def test_create_new_super_user(self):
+        """
+        This test will check whether a new user is
+        created and have the super user & staf tag
+        assigned to it.
+        """
+        user = get_user_model().objects.create_superuser(
+            'test_123@gmail.com',
+            'Test123'
+        )
+
+        # check whether new user is super user
+        self.assertTrue(user.is_superuser)
+        # check whether new user is staff
+        self.assertTrue(user.is_staff)
