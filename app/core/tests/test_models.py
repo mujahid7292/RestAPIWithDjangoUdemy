@@ -24,3 +24,26 @@ class ModelTests(TestCase):
         # or not.
         self.assertEqual(user.email,email)
         self.assertTrue(user.check_password(password))
+
+
+    def test_new_user_email_normalized(self):
+        """
+        This test will check whether we have implemented
+        email text normalized / convert all upper case letter
+        in email to lowercase or not.
+        """
+
+        # Now we will create a dummy email with all upper case
+        # after @ sign 
+        email = "test_email@GMAIL.COM"
+        password = "Test1234"
+
+        # Create fake user object using above emaill & pass
+        user = get_user_model().objects.create_user(
+            email = email,
+            password = password
+        )
+
+        # Now we will check whether our upper case email
+        # has been converted into lower case.
+        self.assertEqual(user.email, email.lower())

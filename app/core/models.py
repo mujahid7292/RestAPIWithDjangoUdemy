@@ -20,7 +20,10 @@ class UserManager(BaseUserManager):
         This function return a newly created user.
         """
 
-        user = self.model(email=email,**extra_fields)
+        user = self.model(
+            email=self.normalize_email(email),
+            **extra_fields
+            )
         user.set_password(password)
         user.save(using=self._db)
 
