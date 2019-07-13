@@ -47,3 +47,16 @@ class ModelTests(TestCase):
         # Now we will check whether our upper case email
         # has been converted into lower case.
         self.assertEqual(user.email, email.lower())
+
+
+    def test_invalid_user_email_raise_value_error(self):
+        """
+        This test will ensure that if we try to create a new
+        user without providing an emaill address, our function
+        will raise a value error.
+        """
+        with self.assertRaises(ValueError):
+            # anything that we run in here should 
+            # raise the value error And if it doesn't 
+            # raise the value error, then this test will fail.
+            get_user_model().objects.create_user(None,'test123')

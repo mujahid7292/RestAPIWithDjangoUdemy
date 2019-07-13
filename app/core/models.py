@@ -19,6 +19,8 @@ class UserManager(BaseUserManager):
         return
         This function return a newly created user.
         """
+        if not email:
+            raise ValueError('User must provide email address')
 
         user = self.model(
             email=self.normalize_email(email),
