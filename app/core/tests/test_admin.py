@@ -63,3 +63,16 @@ class AdminSiteTests(TestCase):
         # Now we will test that this page rendered ok.
         self.assertEqual(res.status_code, 200)
         # 200 means rendered ok.
+
+    def test_create_user_page(self):
+        """
+        Test that will verify that create user page rendered
+        correctly or not.
+        """
+        url = reverse('admin:core_user_add')
+        # Now we are going to do a http get on this above url.
+        res = self.client.get(url)
+
+        # Now we will test that this page rendered ok.
+        self.assertEqual(res.status_code, 200)
+        # 200 means rendered ok.
