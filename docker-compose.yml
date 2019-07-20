@@ -25,3 +25,36 @@ services:
       sh -c "python3 manage.py runserver 0.0.0.0:8000"
       # sh = We are going to run the command using shell
       # -c = Run following command
+    environment:
+      - DB_HOST=db
+      # Here right side 'db' must match with the db service name.
+      # As we have named our database service as db, that is why
+      # we put 'DB_HOST=db'
+      - DB_NAME=app
+      # As in our db service's environment we have set
+      # 'POSTGRES_DB=app', that is why above we have write
+      # 'DB_NAME=app'
+      - DB_USER=postgres
+      # As in our db service's environment we have set
+      # 'POSTGRES_USER=postgres'
+      - DB_PASS=anypassword
+      # As in our db service's environment we have set
+      # 'POSTGRES_PASSWORD=anypassword'
+
+    # When you run docker-compose you can set, different
+    # services that depend on other services, by declaring
+    # it on depends on section.
+    depends_on:
+      - db
+      # We want our app service to  depend on our db
+      # service. This means two things. 1) db service
+      # will start before app sevice. 2) db service
+      # will be able able via the network.
+  db: # This is the name of our services
+    image: postgres:10-alpine
+    # Docker will locate 'postgres' image from docker hub
+    # and it will pull down the version with a tag '10-alpine'
+    environment:
+      - POSTGRES_DB=app
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=anypassword
