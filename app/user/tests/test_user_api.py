@@ -21,6 +21,8 @@ CREATE_USER_URL = reverse('user:create')
 # the user for each test individually you can just call the
 # helper function and it just makes it a little bit easier
 # to create users that you're testing with.
+
+
 def create_user(**params):
     return get_user_model().objects.create_user(**params)
 
@@ -29,6 +31,8 @@ def create_user(**params):
 # of this would be the create user, because when you typically
 # create a user on a system, usually you're creating a user
 # because you haven't got authentication set up already.
+
+
 class PublicUserAPITest(TestCase):
     """
     Test publicly available user api.
@@ -55,9 +59,9 @@ class PublicUserAPITest(TestCase):
         """
         # First create a valid payload
         payload = {
-            'email':'test@gmail.com',
-            'password':'testpass123',
-            'name':'Test user name'
+            'email': 'test@gmail.com',
+            'password': 'testpass123',
+            'name': 'Test user name'
         }
 
         # Now we will make our request to CREATE_USER_URL using
@@ -71,7 +75,7 @@ class PublicUserAPITest(TestCase):
         # Next we're going to test that the user object is actually
         # created. So we will retrieve created user from django db.
         user = get_user_model().objects.get(**res.data)
-        
+
         # Now we will check the retrieved user password, with our
         # payload password. If match then, user creation is successfull.
         self.assertTrue(user.check_password(payload['password']))
@@ -89,9 +93,9 @@ class PublicUserAPITest(TestCase):
         """
         # Generate a valid payload
         payload = {
-            'email':'test@gmail.com',
-            'password':'testpass123',
-            'name':'Test user name'
+            'email': 'test@gmail.com',
+            'password': 'testpass123',
+            'name': 'Test user name'
         }
         # Create new user using create_user() function.
         create_user(**payload)
@@ -103,7 +107,7 @@ class PublicUserAPITest(TestCase):
         # We expect to see here is a HTTP 400 bad request because
         # it's a bad request because the user already exists.
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-    
+
     # Now we are going to create a test which will check whether
     # the password is too short.
     def test_password_too_short(self):
@@ -112,9 +116,9 @@ class PublicUserAPITest(TestCase):
         """
         # Generate a payload with very short password
         payload = {
-            'email':'test@gmail.com',
-            'password':'pw',
-            'name':'Test user name'
+            'email': 'test@gmail.com',
+            'password': 'pw',
+            'name': 'Test user name'
         }
 
         # Now we will make our request to CREATE_USER_URL using
@@ -128,7 +132,7 @@ class PublicUserAPITest(TestCase):
 
         # Now lets check that the user was never created.
         user_exist = get_user_model().objects.filter(
-            email = payload['email']
+            email=payload['email']
         ).exists()
         # What this above code will do is, if the user exists it will
         # return true otherwise it will return false.
