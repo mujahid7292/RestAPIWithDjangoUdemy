@@ -13,6 +13,7 @@ from rest_framework import status
 # tests a little bit easier to read and understand.
 
 CREATE_USER_URL = reverse('user:create')
+TOKEN_URL = reverse('user:token')
 
 # Then we're going to add a helper function that we can
 # use to create some example users for our tests.
@@ -137,3 +138,108 @@ class PublicUserAPITest(TestCase):
         # What this above code will do is, if the user exists it will
         # return true otherwise it will return false.
         self.assertFalse(user_exist)
+
+    def test_create_token_for_user(self):
+        """
+        Test the a token is created for the user.
+        """
+        # First we will create a user.
+        payload = {
+            'email': 'test@gmail.com',
+            'password': 'testpass123',
+            'name': 'Test user name'
+        }
+        # Create new user using create_user() function.
+        create_user(**payload)
+
+        # Now as our user has been created in our system, we will
+        # check whether our system give us token for that user or
+        # not. Now we will make our request to TOKEN_URL using
+        # this avobe payload.
+        res = self.client.post(payload, TOKEN_URL)
+        # Here, our res object has token & http response status.
+
+        # First we will check whether our system has given this user
+        # authentication token or not.
+        self.assertIn('token', res.data)
+        # So this assertion will check whether there is a key called
+        # 'token' in the res.data that we get back.
+
+        # Next we will assert that response is HTTP 200
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    # Now we're going to test what happens if we provide invalid
+    # credentials.
+    def test_create_token_invalid_credential(self):
+        """
+        Test that token is not created, if invalid credential is
+        given.
+        """
+        # First we will create an user in our system.
+        create_user(email='mujahid7292@gmail.com', password='123456')
+
+        # Now we will create an invalid sign in attempt, means
+        # user will provide valid email, but wrong password.
+        payload = {
+            'email': 'mujahid7292@gmail.com',
+            'password': 'wrongPassword'
+        }
+
+        # Now we will try this invalid sign in
+        res = self.client.post(TOKEN_URL, payload)
+        # This res object generally contain the authentication
+        # token & response status.
+
+        # Now we will assert that, this res object does not have
+        # token in it.
+        self.assertNotIn('token', res.data)
+
+        # Next we will assert that response is HTTP_400_BAD_REQUEST
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    # In the next unit test we will check, if you're trying to authenticate
+    # a non-existent user, what happen.
+    def test_create_token_no_user(self):
+        """
+        Test that token is not created, if user does not exist.
+        """
+        # Now create our valid payload
+        payload = {
+            'email': 'mujahid7292@gmail.com',
+            'password': '123456'
+        }
+
+        # Now we will try to authenticate with above user name
+        # and password in our system, without creating user
+        # with this exact email & password.
+
+        # Now we will try this invalid sign in
+        res = self.client.post(TOKEN_URL, payload)
+        # This res object generally contain the authentication
+        # token & response status.
+
+        # Now we will assert that, this res object does not have
+        # token in it.
+        self.assertNotIn('token', res.data)
+
+        # Next we will assert that response is HTTP_400_BAD_REQUEST
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    # this unit test will check, if you provide a request that doesn't
+    # include a password, token is not returned.
+    def test_create_token_missing_field(self):
+        """
+        Test that to authenticate with the server, email and
+        password is required.
+        """
+        res = self.client.post(TOKEN_URL, {'email': 'one', 'password': ''})
+        # This res object generally contain the authentication
+        # token & response status.
+
+        # Now we will assert that, this res object does not have
+        # token in it.
+        self.assertNotIn('token', res.data)
+
+        # Next we will assert that response is HTTP_400_BAD_REQUEST
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
