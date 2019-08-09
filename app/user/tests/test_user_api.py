@@ -156,7 +156,7 @@ class PublicUserAPITest(TestCase):
         # check whether our system give us token for that user or
         # not. Now we will make our request to TOKEN_URL using
         # this avobe payload.
-        res = self.client.post(payload, TOKEN_URL)
+        res = self.client.post(TOKEN_URL, payload)
         # Here, our res object has token & http response status.
 
         # First we will check whether our system has given this user
@@ -242,4 +242,3 @@ class PublicUserAPITest(TestCase):
 
         # Next we will assert that response is HTTP_400_BAD_REQUEST
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-
