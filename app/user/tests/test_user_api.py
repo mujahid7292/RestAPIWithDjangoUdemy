@@ -14,6 +14,8 @@ from rest_framework import status
 
 CREATE_USER_URL = reverse('user:create')
 TOKEN_URL = reverse('user:token')
+ME_URL = reverse('user:me') 
+# ME_URL = This is update user end point.
 
 # Then we're going to add a helper function that we can
 # use to create some example users for our tests.
@@ -242,3 +244,106 @@ class PublicUserAPITest(TestCase):
 
         # Next we will assert that response is HTTP_400_BAD_REQUEST
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    # The first thing we're going to do is we're going to create a test
+    # to make sure that authentication is required on the manage user
+    # endpoint.
+    def test_retrieve_user_unauthorized(self):
+        """
+        Test that authentication is required for the user.
+        """
+        res = self.client.post(ME_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+# We are going to make a PrivateUserAPITest class for authenticated test.
+# Means test those require authentication will be in this class.
+class PrivateUserAPITest(TestCase):
+    """
+    Test API requests that require authentication.
+    """
+    # Part of the setup, we're going to do the authentication
+    # for each test that we do. So we don't need to basically set
+    # the authentication for every single test we're just do the
+    # setup and then that happens automatically before each test.
+    def setup(self):
+        """
+        This function is run before every test from this
+        class is run. So some times there are some set up
+        task, that need to be done before running every
+        test from this class.
+        """
+        self.user = create_user(
+            email='mujahid7292@gmail.com',
+            password='strongPassword123',
+            name='Saifullah Al Mujahid'
+        )
+        # This above code create a valid user in our system, so
+        # that other function from this class can access this
+        # specific user.
+
+        self.client = APIClient()
+        # What this above line does is, it basically set
+        # APIClient() to self, so that other function from
+        # this class can access APIClient()
+        self.client.force_authenticate(user=self.user)
+        # force_authenticate() method is used to authenticate any
+        # requests that the client makes with our above user.
+
+    # Next thing we're going to do is add our retrieve profile
+    # successful test. We're just going to test that we can
+    # retrieve the profile of the logged in user.
+    def test_retrieve_profile_success(self):
+        """
+        Test retrieving profile for logged in user.
+        """
+        # Then what we will do is we'll just make the request because
+        # we've already authenticated in our setup so we don't need
+        # to do that authentication in this function.
+        res = self.client.post(ME_URL)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        # Then we're going to test that the user object returned is
+        # what we expect.
+        self.assertEqual(res.data, {
+            'name': self.user.name,
+            'email': self.user.email
+        })
+
+    # Next we're going to test that you cannot do a HTTP POST request
+    # on the profile.
+    def test_post_on_me_url_not_allowed(self):
+        """
+        Test that post is not allowed on the me url.
+        """
+        res = self.client.post(ME_URL, {})
+
+        self.assertEqual(
+            res.status_code,
+            status.HTTP_405_METHOD_NOT_ALLOWED
+        )
+
+    # Next we are going to add our user profile update test.
+    # So we're going to update the user via the API and we're
+    # going to test that the updates worked.
+    def test_update_user_profile(self):
+        """
+        Test updating the user profile for authenticated user
+        works.
+        """
+        payload = {
+            'name': 'New Name',
+            'password': 'newPassword123'
+        }
+
+        # Now we will update our user
+        res = self.client.patch(ME_URL, payload)
+
+        self.user.refresh_from_db()
+        # This above code will refresh our existing user.
+
+        # Now we will check that our user is updated or not.
+        self.assertEqual(self.user.name, payload['name'])
+        self.assertTrue(self.user.check_password(payload['password']))
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
