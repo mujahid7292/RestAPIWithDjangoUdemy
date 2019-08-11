@@ -43,6 +43,40 @@ class UserSerializer(serializers.ModelSerializer):
         """
         return get_user_model().objects.create_user(**validated_data)
 
+    # Now we will create update() function. The purpose of this function
+    # is, we want to make sure the user password is set using the set
+    # password function instead of just setting it to whichever value
+    # is provided.
+    def update(self, instance, validated_data):
+        """
+        Update a user, setting the password correctly and return it.
+        """
+        # instance = This is going to be the model instance that is
+        # linked to our ModelSerializer and that's going to be our
+        # user object.
+        # validated_data = {'email', 'password', 'name'}
+
+        # First we will remove the password from the validated
+        # data. We do that using the dictionary pop function.
+        password = validated_data.pop('password', None)
+        # The reason we provide None here is because with the pop
+        # function you must provide a default value. What pop does
+        # is it basically is very similar to get except after its
+        # retrieved it, it will remove it from the original dictionary.
+        user = super().update(instance, validated_data)
+        # What we're doing here is, super() will call the ModelSerializer
+        # update() functions. So it will call the default function. So
+        # we can make use of all the functionality that's included in
+        # the default one whilst extending it slightly to customize it
+        # for our needs.
+
+        # Next we're going to set the password,if the user provided
+        # a password.
+        if password:
+            user.set_password(password)
+            user.save()
+            
+        return user
 
 class AuthTokenSerializer(serializers.Serializer):
         """

@@ -276,7 +276,7 @@ class PrivateUserAPITest(TestCase):
         self.user = create_user(
             email='mujahid7292@gmail.com',
             password='strongPassword123',
-            name='Saifullah Al Mujahid'
+            name='saifullah al mujahid'
         )
         # This above code create a valid user in our system, so
         # that other function from this class can access this
