@@ -38,7 +38,6 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
     # logged in.
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
-
     # Finally we need to add a get_object() function to our API view.
     # So typically what would happen with an API view is you would
     # link it to a model and it could retrieve the item and you

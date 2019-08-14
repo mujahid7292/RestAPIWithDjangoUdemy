@@ -14,7 +14,7 @@ from rest_framework import status
 
 CREATE_USER_URL = reverse('user:create')
 TOKEN_URL = reverse('user:token')
-ME_URL = reverse('user:me') 
+ME_URL = reverse('user:me')
 # ME_URL = This is update user end point.
 
 # Then we're going to add a helper function that we can
@@ -274,9 +274,9 @@ class PrivateUserAPITest(TestCase):
         test from this class.
         """
         self.user = create_user(
-            email='mujahid7292@gmail.com',
+            email='test@gmail.com',
             password='strongPassword123',
-            name='saifullah al mujahid'
+            name='saifullah al mujahid',
         )
         # This above code create a valid user in our system, so
         # that other function from this class can access this
@@ -289,10 +289,11 @@ class PrivateUserAPITest(TestCase):
         self.client.force_authenticate(user=self.user)
         # force_authenticate() method is used to authenticate any
         # requests that the client makes with our above user.
+        # Authenticate client with user
 
     # Next thing we're going to do is add our retrieve profile
     # successful test. We're just going to test that we can
-    # retrieve the profile of the logged in user.
+    # retrieve the profile of the logged in user.   
     def test_retrieve_profile_success(self):
         """
         Test retrieving profile for logged in user.
@@ -300,7 +301,7 @@ class PrivateUserAPITest(TestCase):
         # Then what we will do is we'll just make the request because
         # we've already authenticated in our setup so we don't need
         # to do that authentication in this function.
-        res = self.client.post(ME_URL)
+        res = self.client.get(ME_URL)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
