@@ -256,6 +256,7 @@ class PublicUserAPITest(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
+
 # We are going to make a PrivateUserAPITest class for authenticated test.
 # Means test those require authentication will be in this class.
 class PrivateUserAPITest(TestCase):
@@ -266,7 +267,7 @@ class PrivateUserAPITest(TestCase):
     # for each test that we do. So we don't need to basically set
     # the authentication for every single test we're just do the
     # setup and then that happens automatically before each test.
-    def setup(self):
+    def setUp(self):
         """
         This function is run before every test from this
         class is run. So some times there are some set up
@@ -274,14 +275,13 @@ class PrivateUserAPITest(TestCase):
         test from this class.
         """
         self.user = create_user(
-            email='test@gmail.com',
-            password='strongPassword123',
-            name='saifullah al mujahid',
+            email='test@londonappdev.com',
+            password='testpass',
+            name='fname',
         )
         # This above code create a valid user in our system, so
         # that other function from this class can access this
         # specific user.
-
         self.client = APIClient()
         # What this above line does is, it basically set
         # APIClient() to self, so that other function from
@@ -289,11 +289,10 @@ class PrivateUserAPITest(TestCase):
         self.client.force_authenticate(user=self.user)
         # force_authenticate() method is used to authenticate any
         # requests that the client makes with our above user.
-        # Authenticate client with user
 
     # Next thing we're going to do is add our retrieve profile
     # successful test. We're just going to test that we can
-    # retrieve the profile of the logged in user.   
+    # retrieve the profile of the logged in user.
     def test_retrieve_profile_success(self):
         """
         Test retrieving profile for logged in user.

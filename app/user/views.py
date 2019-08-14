@@ -3,6 +3,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 from user.serializers import UserSerializer, AuthTokenSerializer
 
+
 # We're going to create a new view and that view are going to inherit
 # from create API view, that comes with the Django rest framework.
 # So this is a view that's pre-made for us that allows us to easily
@@ -21,6 +22,7 @@ class CreateAuthToken(ObtainAuthToken):
     """
     serializer_class = AuthTokenSerializer
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+
 
 class ManageUserView(generics.RetrieveUpdateAPIView):
     """
@@ -45,6 +47,7 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
     # just get the model for the logged in user. So we're going to
     # override the get object and we're just going to return the user
     # that is authenticated.
+
     def get_object(self):
         """
         Retrieve and return authenticated user.
