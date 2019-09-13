@@ -83,7 +83,8 @@ class PrivateTagsApiTests(TestCase):
         # what we're going to do first is we're going to create a new user
         # in addition to the user that is created at the setUp() just so we
         # can assign a tag to that user and then we can compare that, tag
-        # was not included in the response because it was not the authenticated user.
+        # was not included in the response because it was not the
+        # authenticated user.
         user2 = get_user_model().objects.create_user(
             'other@gmail.com',
             'testpass'
